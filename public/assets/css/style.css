@@ -25,6 +25,7 @@
   --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
   --serif: "Instrument Serif", Georgia, serif;
   --gutter: clamp(16px, 4vw, 56px);
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

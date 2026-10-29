@@ -127,8 +127,9 @@
       window.gtag && gtag("event", "generate_lead", { origem, segmento: d.segmento });
       window.fbq && fbq("track", "Lead", { content_category: d.segmento });
     });
-    const w = window.open(url, "_blank");
-    if (w) w.opener = null; else location.href = url;
+    // link real (funciona também em navegadores que bloqueiam window.open)
+    const a = Object.assign(document.createElement("a"), { href: url, target: "_blank", rel: "noopener" });
+    document.body.appendChild(a); a.click(); a.remove();
   }
 
   // Formulário completo (seção final)
