@@ -441,32 +441,13 @@
     onScroll();
   });
 
-  /* ---------- Loader e entrada ---------- */
-  const loader = $(".loader"), num = $(".loader__n");
-  let started = false;
-  const start = () => {
-    if (started) return; started = true;
-    loader.classList.add("is-done");
-    document.body.classList.remove("is-loading");
-    window.dispatchEvent(new Event("lp:start"));
-    if (hasGsap && !reduced) {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl.from(".nav", { y: -40, opacity: 0, duration: 1 }, 0)
-        .from(".hero__tag", { y: 20, opacity: 0, duration: 0.9 }, 0.1)
-        .from($$(".w > span", $(".hero__title")), { yPercent: 110, duration: 1.2, stagger: 0.045 }, 0.15)
-        .from([".hero__sub", ".hero__actions", ".hero__note"], { y: 30, opacity: 0, duration: 1, stagger: 0.1 }, 0.55)
-        .from(".hero__stage", { y: 80, opacity: 0, rotationX: 25, duration: 1.6 }, 0.3)
-        .from(".chip", { scale: 0.6, opacity: 0, duration: 0.8, stagger: 0.12, ease: "back.out(2)" }, 1.1);
-    }
-    safe(scrollAnims);
-  };
-  let pct = 0;
-  const t0 = performance.now();
-  const count = () => {
-    pct = Math.min(100, Math.round(((performance.now() - t0) / 1100) * 100));
-    num.textContent = pct;
-    if (pct < 100) requestAnimationFrame(count); else setTimeout(start, 120);
-  };
-  requestAnimationFrame(count);
-  setTimeout(start, 4000);
+  /* ---------- Entrada (o site abre direto, sem tela de carregamento) ---------- */
+  window.dispatchEvent(new Event("lp:start"));
+  if (hasGsap && !reduced) {
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.from($$(".w > span", $(".hero__title")), { yPercent: 100, duration: 0.8, stagger: 0.025 }, 0)
+      .from([".hero__sub", ".hero__actions", ".hero__note"], { y: 16, opacity: 0, duration: 0.6, stagger: 0.06 }, 0.2)
+      .from(".chip", { scale: 0.7, opacity: 0, duration: 0.6, stagger: 0.08, ease: "back.out(2)" }, 0.5);
+  }
+  safe(scrollAnims);
 })();
