@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261029a">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261029b">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,14 +33,14 @@
 
   <!-- Loader -->
   <div class="loader" aria-hidden="true">
-    <div class="loader__mark"><svg viewBox="0 0 100 100"><use href="#vx"/></svg></div>
+    <div class="loader__mark"><span class="logo-mark"></span></div>
     <span class="loader__n">0</span>
   </div>
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
-      <linearGradient id="gvx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset=".55" stop-color="#22d3ee"/><stop offset="1" stop-color="#f472b6"/></linearGradient>
-      <symbol id="vx" viewBox="0 0 100 100"><path fill="url(#gvx)" d="M50 6a44 44 0 1 0 44 44h-14a30 30 0 1 1-30-30zm0 22a22 22 0 1 0 22 22H58a8 8 0 1 1-8-8z"/></symbol>
+      <linearGradient id="gvx" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0066FF"/><stop offset="1" stop-color="#19e6a0"/></linearGradient>
+      <symbol id="ig" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></symbol>
       <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></symbol>
       <symbol id="arr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
     </defs>
@@ -52,10 +52,10 @@
   <!-- Nav -->
   <header class="nav">
     <a href="#inicio" class="nav__logo" aria-label="Vortex Company, início">
-      <svg><use href="#vx"/></svg><span>VORTEX<small>COMPANY</small></span>
+      <span class="logo-mark"></span><span class="logo-word"></span>
     </a>
     <nav class="nav__links" aria-label="Principal">
-      <a href="#vitrine">Vitrine 3D</a>
+      <a href="#vitrine">Vitrine</a>
       <a href="#diferenciais">Diferenciais</a>
       <a href="#como">Como funciona</a>
       <a href="#faq">Dúvidas</a>
@@ -83,11 +83,11 @@
             <div class="browser__bar">
               <span class="dots"><i></i><i></i><i></i></span>
               <span class="browser__url"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z"/></svg><b data-demo-url>sorrisoprime.demo</b></span>
-              <span class="browser__live"><i></i>AO VIVO</span>
+              <span class="browser__tag">Modelo demonstrativo</span>
             </div>
-            <div class="browser__screen"><iframe data-demo title="Demonstração de site premium navegando" loading="eager" tabindex="-1"></iframe></div>
+            <div class="browser__screen" data-demo-screen></div>
           </div>
-          <div class="phone"><div class="phone__screen"><img data-demo-phone alt="" src="assets/modelos/clinica-m.webp"></div></div>
+          <div class="phone"><div class="phone__screen" data-demo-phone></div></div>
           <span class="chip chip--1"><b>3D</b> Animações reais</span>
           <span class="chip chip--2"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="m5 12 4 4 10-10"/></svg> 100% responsivo</span>
           <span class="chip chip--3"><svg><use href="#wa"/></svg> Novo contato pelo site</span>
@@ -101,7 +101,7 @@
     <!-- Faixa -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee__in">
-        <span>Clínicas</span><i>✦</i><span>Vidraçarias</span><i>✦</i><span>Advocacia</span><i>✦</i><span>Estética</span><i>✦</i><span>Construtoras</span><i>✦</i><span>Restaurantes</span><i>✦</i><span>Academias</span><i>✦</i><span>Imobiliárias</span><i>✦</i><span>Comércio</span><i>✦</i><span>Prestadores de serviço</span><i>✦</i>
+        <span>Clínicas</span><i>✦</i><span>Vidraçarias</span><i>✦</i><span>Advocacia</span><i>✦</i><span>Estética</span><i>✦</i><span>Indústrias</span><i>✦</i><span>Construtoras</span><i>✦</i><span>Restaurantes</span><i>✦</i><span>Academias</span><i>✦</i><span>Imobiliárias</span><i>✦</i><span>Comércio</span><i>✦</i><span>Prestadores de serviço</span><i>✦</i>
       </div>
     </div>
 
@@ -116,7 +116,6 @@
       <div class="ring-filters container" data-r role="tablist" aria-label="Filtrar modelos">
         <button class="pill is-on" data-cat="todos">Todos</button>
         <button class="pill" data-cat="institucional">Institucionais premium</button>
-        <button class="pill" data-cat="3d">Animações 3D</button>
         <button class="pill" data-cat="servicos">Negócios de serviços</button>
         <button class="pill" data-cat="captacao">Comerciais e captação</button>
         <button class="pill" data-cat="responsivo">Responsivos</button>
@@ -137,7 +136,7 @@
           <p data-ri-seg></p>
         </div>
         <div class="ring-info__act">
-          <button class="btn btn--ghost" data-ri-open><span>Ver modelo ao vivo</span><svg class="ico"><use href="#arr"/></svg></button>
+          <button class="btn btn--ghost" data-ri-open><span>Ampliar modelo</span><svg class="ico"><use href="#arr"/></svg></button>
           <span class="hint"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M8 13V5a2 2 0 0 1 4 0v6m0-2a2 2 0 0 1 4 0v2m0 0a2 2 0 0 1 4 0v3a7 7 0 0 1-7 7h-1a7 7 0 0 1-6-3l-2-3a2 2 0 0 1 3-2l1 1"/></svg>Arraste para girar</span>
         </div>
       </div>
@@ -166,20 +165,17 @@
               <div class="compare__screen">
                 <!-- antes -->
                 <div class="old">
-                  <div class="old__top">EMPRESA EXEMPLO LTDA</div>
-                  <div class="old__menu"><u>Home</u> | <u>Quem Somos</u> | <u>Serviços</u> | <u>Fale Conosco</u></div>
-                  <div class="old__marq"><span>*** BEM-VINDO AO NOSSO SITE!!! *** SITE EM CONSTRUÇÃO ***</span></div>
-                  <div class="old__body">
-                    <div class="old__img">[ imagem ]</div>
-                    <div><b>Quem Somos</b><p>Somos uma empresa séria e comprometida com a qualidade. Clique aqui para saber mais informações sobre nossos serviços.</p><p class="old__link">» Clique aqui «</p></div>
-                  </div>
-                  <div class="old__counter">Você é o visitante nº <span>000127</span></div>
+                  <div class="old__head"><span class="old__logo">EMPRESA EXEMPLO</span><span class="old__menu">Home &nbsp;|&nbsp; Empresa &nbsp;|&nbsp; Serviços &nbsp;|&nbsp; Contato</span></div>
+                  <div class="old__img"><img src="assets/antigo.jpg" alt=""></div>
+                  <div class="old__body"><b>Bem vindo ao nosso site</b><p>Somos uma empresa com anos de experiência no mercado, trabalhando sempre com qualidade e compromisso com nossos clientes. Entre em contato para mais informações.</p></div>
+                  <div class="old__foot">Copyright © 2011 · Todos os direitos reservados · Melhor visualizado em 1024x768</div>
                 </div>
                 <!-- depois -->
                 <div class="new" data-new>
-                  <img src="assets/modelos/advocacia.webp" alt="O mesmo negócio com um site premium" loading="lazy">
+                  <img src="assets/modelos/vidracaria.webp" alt="O mesmo negócio com um site premium" loading="lazy">
                 </div>
                 <div class="scan" data-scan></div>
+                <div class="glitch"></div>
               </div>
             </div>
             <div class="compare__labels"><span class="lb lb--old">Como pode estar hoje</span><span class="lb lb--new">Como pode ficar</span></div>
@@ -236,16 +232,6 @@
             <div class="btxt"><span class="bn">05</span><h3>Tecnologia e desempenho</h3><p>Desenvolvimento moderno, com atenção à velocidade, estabilidade e usabilidade.</p></div>
           </article>
 
-          <article class="bcard bcard--full" data-r data-tilt-card>
-            <div class="btxt"><span class="bn">06</span><h3>Mensuração</h3><p>Integração com ferramentas de análise para você acompanhar visitas, cliques e contatos gerados pelo site, e tomar decisões com base em dados.</p></div>
-            <div class="bvis vis-chart">
-              <span class="ex">Exemplo</span>
-              <div class="bars">
-                <div><i style="--v:.38"></i><small>Seg</small></div><div><i style="--v:.52"></i><small>Ter</small></div><div><i style="--v:.46"></i><small>Qua</small></div><div><i style="--v:.68"></i><small>Qui</small></div><div><i style="--v:.6"></i><small>Sex</small></div><div><i style="--v:.82"></i><small>Sáb</small></div><div><i style="--v:.94"></i><small>Dom</small></div>
-              </div>
-              <ul class="legend"><li><i class="l1"></i>Visitas</li><li><i class="l2"></i>Cliques no WhatsApp</li><li><i class="l3"></i>Formulários</li></ul>
-            </div>
-          </article>
         </div>
       </div>
     </section>
@@ -304,7 +290,6 @@
           <details><summary>O site funciona bem no celular?</summary><p>Sim. Todo projeto é desenvolvido para celular, tablet e computador, com testes nas diferentes telas antes de ir ao ar.</p></details>
           <details><summary>Preciso ter textos e fotos prontos?</summary><p>Não necessariamente. Ajudamos você a organizar as informações e a estrutura das páginas para apresentar sua empresa da melhor forma.</p></details>
           <details><summary>Já tenho um site. Vocês refazem?</summary><p>Sim. Analisamos o que você tem hoje e criamos uma nova versão, com visual e estrutura à altura da sua empresa.</p></details>
-          <details><summary>Os modelos da vitrine são de clientes?</summary><p>Não. São modelos demonstrativos, com empresas fictícias, para mostrar estilos possíveis. O seu site é criado do zero, com a identidade da sua marca.</p></details>
         </div>
       </div>
     </section>
@@ -341,16 +326,26 @@
 
   <footer class="footer">
     <div class="container footer__in">
-      <a href="#inicio" class="nav__logo"><svg><use href="#vx"/></svg><span>VORTEX<small>COMPANY</small></span></a>
-      <p>Sites premium para empresas que valorizam qualidade, tecnologia e profissionalismo.</p>
-      <button class="btn btn--ghost btn--sm" data-lead="rodape"><svg class="ico"><use href="#wa"/></svg><span>Falar no WhatsApp</span></button>
+      <div class="footer__brand">
+        <a href="#inicio" class="footer__logo" aria-label="Vortex Company"></a>
+        <p>Sites premium para empresas que valorizam qualidade, tecnologia e profissionalismo.</p>
+      </div>
+      <div class="footer__col">
+        <span class="footer__k">Fale com a gente</span>
+        <a class="footer__link" data-wa href="https://wa.me/5547991625752" target="_blank" rel="noopener"><svg><use href="#wa"/></svg><span data-wa-num>(47) 99162-5752</span></a>
+        <a class="footer__link" data-ig href="https://www.instagram.com/vortexcompanybr/" target="_blank" rel="noopener"><svg><use href="#ig"/></svg><span>@vortexcompanybr</span></a>
+      </div>
+      <div class="footer__col">
+        <span class="footer__k">Navegação</span>
+        <a href="#vitrine">Vitrine de modelos</a><a href="#diferenciais">Diferenciais</a><a href="#como">Como funciona</a><a href="#faq">Dúvidas</a>
+      </div>
     </div>
     <div class="footer__big" aria-hidden="true">VORTEX</div>
     <div class="container footer__legal"><span>© <span data-ano></span> Vortex Company · CNPJ 68.063.725/0001-62</span><span>Os modelos da vitrine usam empresas fictícias.</span></div>
   </footer>
 
   <!-- Botões fixos -->
-  <button class="wa-float" data-lead="flutuante" aria-label="Falar no WhatsApp"><svg><use href="#wa"/></svg><span>Fale com a gente</span></button>
+  <a class="wa-float" data-wa href="https://wa.me/5547991625752" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg><use href="#wa"/></svg><span>Fale com a gente</span></a>
   <div class="mbar"><button class="btn btn--cta btn--block" data-lead="barra"><span>QUERO UM SITE DESSE NÍVEL</span><svg class="ico"><use href="#arr"/></svg></button></div>
 
   <!-- Modal do formulário (passo a passo) -->
@@ -391,30 +386,29 @@
     </div>
   </div>
 
-  <!-- Modal do modelo ao vivo -->
-  <div class="modal modal--live" data-modal="live" aria-hidden="true">
+  <!-- Modelo ampliado (só a primeira dobra) -->
+  <div class="modal modal--zoom" data-modal="zoom" aria-hidden="true">
     <div class="modal__bg" data-close></div>
-    <div class="live">
-      <div class="live__bar">
-        <span class="dots"><i></i><i></i><i></i></span>
-        <span class="browser__url"><b data-live-url></b></span>
-        <div class="live__dev" role="group" aria-label="Tamanho da tela">
-          <button class="is-on" data-dev="desk">Computador</button><button data-dev="mob">Celular</button>
-        </div>
-        <button class="modal__x" data-close aria-label="Fechar">×</button>
+    <div class="zoom">
+      <button class="modal__x" data-close aria-label="Fechar">×</button>
+      <div class="zoom__view">
+        <div class="zoom__desk"><div class="browser__bar"><span class="dots"><i></i><i></i><i></i></span><span class="browser__url"><b data-zoom-url></b></span></div><img data-zoom-desk alt=""></div>
+        <div class="zoom__phone"><img data-zoom-mob alt=""></div>
       </div>
-      <div class="live__screen"><iframe data-live-frame title="Modelo ao vivo"></iframe></div>
-      <div class="live__foot"><span>Gostou deste estilo?</span><button class="btn btn--cta btn--sm" data-lead="modelo"><span>Quero um assim para minha empresa</span><svg class="ico"><use href="#arr"/></svg></button></div>
+      <div class="zoom__foot">
+        <div><span class="ring-info__cat" data-zoom-cat></span><b data-zoom-name></b><small>Modelo demonstrativo com empresa fictícia</small></div>
+        <button class="btn btn--cta" data-lead="modelo"><span>QUERO UM ASSIM PARA MINHA EMPRESA</span><svg class="ico"><use href="#arr"/></svg></button>
+      </div>
     </div>
   </div>
 
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
   <script src="assets/vendor/lenis.min.js"></script>
-  <script src="assets/js/data.js?v=20261029a"></script>
-  <script src="assets/js/modelos.js?v=20261029a"></script>
+  <script src="assets/js/data.js?v=20261029b"></script>
+  <script src="assets/js/modelos.js?v=20261029b"></script>
   <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
-  <script type="module" src="assets/js/vortex3d.js?v=20261029a"></script>
-  <script src="assets/js/main.js?v=20261029a"></script>
+  <script type="module" src="assets/js/vortex3d.js?v=20261029b"></script>
+  <script src="assets/js/main.js?v=20261029b"></script>
 </body>
 </html>

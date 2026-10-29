@@ -132,6 +132,18 @@
     document.body.appendChild(a); a.click(); a.remove();
   }
 
+  // Botões de WhatsApp: vão direto para a conversa e registram o clique
+  const waBase = `https://wa.me/${(LP.whatsapp || "").replace(/\D/g, "")}`;
+  $$("[data-wa]").forEach((a) => {
+    a.href = `${waBase}?text=${encodeURIComponent(LP.mensagemDireta || "Olá, Vortex! Vim pelo site e quero saber mais sobre os sites premium.")}`;
+    a.addEventListener("click", () => safe(() => {
+      (window.dataLayer = window.dataLayer || []).push({ event: "clique_whatsapp", local: a.className.split(" ")[0] });
+      window.gtag && gtag("event", "clique_whatsapp", { local: a.className.split(" ")[0] });
+      window.fbq && fbq("track", "Contact");
+    }));
+  });
+  $$("[data-ig]").forEach((a) => a.addEventListener("click", () => safe(() => (window.dataLayer = window.dataLayer || []).push({ event: "clique_instagram" }))));
+
   // Formulário completo (seção final)
   const inlineForm = $(".card-form");
   inlineForm.addEventListener("submit", (e) => {
@@ -155,7 +167,6 @@
   const closeModal = (m) => {
     m.classList.remove("is-open"); m.setAttribute("aria-hidden", "true");
     if (!$(".modal.is-open")) { lenis && lenis.start(); document.documentElement.style.overflow = ""; }
-    if (m.dataset.modal === "live") setTimeout(() => ($("[data-live-frame]").src = "about:blank"), 400);
     lastFocus && lastFocus.focus && lastFocus.focus({ preventScroll: true });
   };
   $$(".modal").forEach((m) => $$("[data-close]", m).forEach((b) => b.addEventListener("click", () => closeModal(m))));
@@ -193,59 +204,50 @@
 
   $$("[data-lead]").forEach((b) => b.addEventListener("click", () => {
     origem = b.dataset.lead;
-    $$(".modal.is-open").forEach((m) => m.dataset.modal === "live" && closeModal(m));
+    $$(".modal.is-open").forEach((m) => m.dataset.modal === "zoom" && closeModal(m));
     openModal("lead");
     // começa no primeiro campo vazio
     const first = names.findIndex((n) => wiz.elements[n].value.trim().length < 2);
     show(first === -1 ? steps.length - 1 : first);
   }));
 
-  // Modelo ao vivo
-  const liveFrame = $("[data-live-frame]");
+  // Modelo ampliado: mostra só a primeira dobra (computador + celular)
   const openLive = (m) => {
-    $("[data-live-url]").textContent = m.url;
-    liveFrame.src = `modelo.html?m=${m.id}`;
-    $$("[data-dev]").forEach((b) => b.classList.toggle("is-on", b.dataset.dev === "desk"));
-    $(".live__screen").classList.remove("is-mob");
-    openModal("live");
+    $("[data-zoom-url]").textContent = m.url;
+    $("[data-zoom-desk]").src = `assets/modelos/${m.id}.webp`;
+    $("[data-zoom-desk]").alt = `Primeira dobra do modelo ${m.nome} no computador`;
+    $("[data-zoom-mob]").src = `assets/modelos/${m.id}-m.webp`;
+    $("[data-zoom-mob]").alt = `Primeira dobra do modelo ${m.nome} no celular`;
+    $("[data-zoom-cat]").textContent = CATS[m.categoria] || "";
+    $("[data-zoom-name]").textContent = `${m.nome} · ${m.segmento}`;
+    openModal("zoom");
   };
-  $$("[data-dev]").forEach((b) => b.addEventListener("click", () => {
-    $$("[data-dev]").forEach((x) => x.classList.toggle("is-on", x === b));
-    $(".live__screen").classList.toggle("is-mob", b.dataset.dev === "mob");
-  }));
 
-  /* ---------- Demonstração ao vivo no hero ---------- */
+  /* ---------- Modelos passando no hero (só a headline) ---------- */
   safe(() => {
-    const frame = $("[data-demo]");
-    const screen = frame.parentElement;
+    const screen = $("[data-demo-screen]");
+    const phone = $("[data-demo-phone]");
     const nav = $("[data-demo-nav]");
     const urlEl = $("[data-demo-url]");
-    const phone = $("[data-demo-phone]");
-    const list = MODELOS.slice(0, 6);
-    let idx = 0, timer = null;
+    const list = MODELOS;
+    const DUR = 4200;
+    screen.innerHTML = list.map((m, i) => `<img src="assets/modelos/${m.id}.webp" alt="Modelo de site para ${m.segmento.toLowerCase()}" ${i ? 'loading="lazy"' : ""}>`).join("");
+    phone.innerHTML = list.map((m, i) => `<img src="assets/modelos/${m.id}-m.webp" alt="" ${i ? 'loading="lazy"' : ""}>`).join("");
     nav.innerHTML = list.map((m, i) => `<button aria-label="Ver ${m.segmento}" data-i="${i}"></button>`).join("");
-    const fit = () => { frame.style.transform = `scale(${screen.clientWidth / 1280})`; };
-    fit(); new ResizeObserver(fit).observe(screen);
+    nav.style.setProperty("--dur", DUR + "ms");
+    const imgs = $$("img", screen), pimgs = $$("img", phone), dots = $$("button", nav);
+    let idx = -1, timer = null;
     const go = (i) => {
       idx = (i + list.length) % list.length;
-      const m = list[idx];
-      screen.classList.add("is-swap");
-      phone.style.opacity = 0;
-      setTimeout(() => {
-        frame.src = `modelo.html?m=${m.id}&demo=1`;
-        urlEl.textContent = m.url;
-        phone.src = `assets/modelos/${m.id}-m.webp`;
-        phone.style.opacity = 1;
-      }, 350);
-      frame.onload = () => screen.classList.remove("is-swap");
-      $$("button", nav).forEach((b, k) => { b.classList.remove("is-on"); if (k === idx) { void b.offsetWidth; b.classList.add("is-on"); } });
+      imgs.forEach((im, k) => im.classList.toggle("is-on", k === idx));
+      pimgs.forEach((im, k) => im.classList.toggle("is-on", k === idx));
+      urlEl.textContent = list[idx].url;
+      dots.forEach((b, k) => { b.classList.remove("is-on"); if (k === idx) { void b.offsetWidth; b.classList.add("is-on"); } });
       clearTimeout(timer);
-      timer = setTimeout(() => go(idx + 1), 16000); // segurança, caso o aviso de fim não chegue
+      timer = setTimeout(() => go(idx + 1), DUR);
     };
-    addEventListener("message", (e) => { if (e.data && e.data.tipo === "modelo-fim") go(idx + 1); });
     nav.addEventListener("click", (e) => { const b = e.target.closest("button"); b && go(+b.dataset.i); });
-    nav.style.setProperty("--dur", "12s");
-    window.addEventListener("lp:start", () => go(0), { once: true });
+    go(0);
   });
 
   /* ---------- Vitrine em anel 3D ---------- */
@@ -356,20 +358,6 @@
     }));
   });
 
-  /* ---------- Inclinação 3D do aparelho do hero ---------- */
-  safe(() => {
-    const dev = $("[data-tilt]");
-    if (!fine || reduced || !hasGsap) return;
-    const rx = gsap.quickTo(dev, "rotationX", { duration: 1.2, ease: "power3" });
-    const ry = gsap.quickTo(dev, "rotationY", { duration: 1.2, ease: "power3" });
-    gsap.set(dev, { rotationX: 8, rotationY: -14 });
-    addEventListener("pointermove", (e) => {
-      if (scrollY > innerHeight) return;
-      ry(-14 + (e.clientX / innerWidth - 0.5) * 16);
-      rx(8 - (e.clientY / innerHeight - 0.5) * 10);
-    });
-  });
-
   /* ---------- Cartões com luz e inclinação ---------- */
   if (fine && !reduced) $$("[data-tilt-card]").forEach((c) => {
     c.addEventListener("pointermove", (e) => {
@@ -404,13 +392,12 @@
     });
 
     // Hero: aparelho se aproxima ao rolar
-    gsap.to(".hero__stage", { yPercent: -8, scale: 0.94, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-    gsap.to(".hero__txt", { y: -80, opacity: 0.2, ease: "none", scrollTrigger: { trigger: ".hero", start: "30% top", end: "bottom top", scrub: true } });
+    gsap.fromTo(".device", { rotationX: 18, scale: 0.92 }, { rotationX: 0, scale: 1, ease: "none", scrollTrigger: { trigger: ".hero__stage", start: "top 95%", end: "top 25%", scrub: true } });
     gsap.to(".marquee__in", { x: -300, ease: "none", scrollTrigger: { trigger: ".marquee", start: "top bottom", end: "bottom top", scrub: true } });
 
     // Problema: antes → depois
     const pqs = $$("[data-pq]");
-    const nw = $("[data-new]"), scan = $("[data-scan]");
+    const nw = $("[data-new]"), scan = $("[data-scan]"), frame3d = $(".compare__frame"), glitch = $(".glitch");
     const desk = !isMob() && innerWidth > 1080;
     ScrollTrigger.create({
       trigger: desk ? ".problema__pin" : ".compare",
@@ -425,6 +412,8 @@
         nw.style.clipPath = `inset(0 0 0 ${(1 - w) * 100}%)`;
         scan.style.left = (1 - w) * 100 + "%";
         scan.style.opacity = w > 0.99 || w < 0.01 ? 0 : 1;
+        frame3d.style.transform = `rotateY(${(1 - p) * -16}deg) rotateX(${(1 - p) * 6}deg) scale(${0.94 + p * 0.06})`;
+        glitch.style.opacity = w > 0.02 && w < 0.98 ? 0.6 + Math.random() * 0.4 : 0;
       },
     });
     ScrollTrigger.create({

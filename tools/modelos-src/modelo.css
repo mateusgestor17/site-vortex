@@ -1,0 +1,56 @@
+:root { --btnfg: #0a0a0a; }
+.m-clinica, .m-pilates, .m-restaurante { --btnfg: #fff; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { font-family: var(--fb), system-ui, sans-serif; color: var(--fg); background: var(--ov); -webkit-font-smoothing: antialiased; overflow: hidden; }
+svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.hero { position: relative; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+.bg { position: absolute; inset: 0; background-size: cover; background-position: var(--pos); transform: scale(1.03); }
+.ov { position: absolute; inset: 0; }
+.t-escuro .ov { background: linear-gradient(90deg, var(--ov) 0%, color-mix(in srgb, var(--ov) 88%, transparent) 30%, color-mix(in srgb, var(--ov) 30%, transparent) 62%, transparent 85%), linear-gradient(0deg, color-mix(in srgb, var(--ov) 70%, transparent), transparent 40%); }
+.t-claro .ov { background: linear-gradient(90deg, var(--ov) 0%, color-mix(in srgb, var(--ov) 92%, transparent) 34%, color-mix(in srgb, var(--ov) 20%, transparent) 62%, transparent 80%); }
+.nav { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 26px 64px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 600 22px var(--fd), serif; letter-spacing: -.01em; }
+.brand i { width: 26px; height: 26px; border-radius: 8px; background: conic-gradient(from 200deg, var(--a), var(--a2), var(--a)); }
+.nav nav { display: flex; gap: 32px; font-size: 15px; color: var(--muted); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 17px 28px; border-radius: 999px; background: var(--a); color: var(--btnfg); font-weight: 600; font-size: 16px; box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--a) 80%, transparent); }
+.btn--sm { padding: 11px 20px; font-size: 14px; }
+.btn--ghost { background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--fg); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fg) 30%, transparent); backdrop-filter: blur(8px); }
+.txt { position: relative; z-index: 2; margin: auto 0; padding: 0 64px 40px; max-width: 780px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--a); }
+.eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; }
+h1 { margin: 22px 0; font: 600 clamp(46px, 6vw, 88px)/1.0 var(--fd), serif; letter-spacing: -.025em; text-wrap: balance; }
+h1 em { font-style: italic; color: var(--a); }
+.m-clinica h1 em, .m-vidracaria h1 em, .m-fabrica h1 em { font-family: "Instrument Serif", serif; font-weight: 400; }
+.m-restaurante h1, .m-academia h1 { font-weight: 400; text-transform: uppercase; letter-spacing: .01em; line-height: .92; font-size: clamp(60px, 7.6vw, 116px); }
+.m-restaurante h1 em, .m-academia h1 em { font-style: normal; }
+.m-advocacia h1 { font-weight: 500; }
+p { margin: 0; font-size: 19px; line-height: 1.55; color: var(--muted); max-width: 540px; }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+ul { list-style: none; margin: 30px 0 0; padding: 0; display: flex; gap: 24px; font-size: 14px; color: var(--muted); }
+li { display: flex; align-items: center; gap: 8px; }
+li svg { color: var(--a); width: 16px; height: 16px; }
+.card { position: absolute; z-index: 2; right: 64px; bottom: 56px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 18px; background: color-mix(in srgb, var(--ov) 70%, transparent); backdrop-filter: blur(16px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 14%, transparent), 0 24px 60px -20px rgba(0, 0, 0, .5); }
+.card > svg { width: 34px; height: 34px; padding: 8px; border-radius: 50%; background: var(--a); color: var(--btnfg); stroke-width: 3; }
+.card b { display: block; font-size: 15px; }
+.card small { color: var(--muted); font-size: 13px; }
+@media (max-width: 600px) {
+  .bg { background-position: var(--posM); }
+  .t-escuro .ov { background: linear-gradient(0deg, var(--ov) 0%, color-mix(in srgb, var(--ov) 92%, transparent) 46%, color-mix(in srgb, var(--ov) 35%, transparent) 72%, color-mix(in srgb, var(--ov) 60%, transparent) 100%); }
+  .t-claro .ov { background: linear-gradient(0deg, var(--ov) 0%, color-mix(in srgb, var(--ov) 94%, transparent) 50%, color-mix(in srgb, var(--ov) 25%, transparent) 76%, color-mix(in srgb, var(--ov) 55%, transparent) 100%); }
+  .nav { padding: 20px; }
+  .nav nav { display: none; }
+  .nav .btn--sm { padding: 9px 14px; font-size: 12px; }
+  .brand { font-size: 18px; }
+  .txt { margin: auto 0 0; padding: 0 22px 40px; }
+  h1 { font-size: 44px; margin: 16px 0; }
+  .m-restaurante h1, .m-academia h1 { font-size: 60px; }
+  p { font-size: 16px; }
+  .btns { margin-top: 24px; }
+  .btns .btn { width: 100%; justify-content: center; }
+  .btns .btn--ghost { display: none; }
+  ul { gap: 14px; flex-wrap: wrap; font-size: 13px; }
+  .card { display: none; }
+}
+.m-academia .bg { transform: translateX(16%) scale(1.04); filter: brightness(1.35) contrast(1.05); }
+@media (max-width: 600px) { .m-academia .bg { transform: translateX(6%) scale(1.04); } }
