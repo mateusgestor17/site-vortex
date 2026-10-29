@@ -1,3 +1,5 @@
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400 800; font-display: swap; src: url(../fonts/InterTight.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; font-display: swap; src: url(../fonts/InstrumentSerif-Italic.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* =========================================================
    Vortex Company · Landing de Sites Premium
    Paleta: base escura + violeta/ciano/rosa (ambiente) + lima (só ação)
@@ -45,8 +47,10 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spa
 .ico { width: 18px; height: 18px; flex: none; }
 
 /* ---------- Fundo ---------- */
-#vortex { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; transition: opacity .6s; }
-.grain { position: fixed; inset: -50%; z-index: 1; pointer-events: none; opacity: .06; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: grain 1s steps(4) infinite; }
+#vortex { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .8s; }
+.vortex-poster { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; object-fit: cover; object-position: right center; pointer-events: none; transition: opacity .8s; }
+.v3d .vortex-poster { opacity: 0; }
+.grain { position: fixed; inset: -50%; z-index: 1; pointer-events: none; opacity: .06; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 @keyframes grain { 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } }
 main, .footer { position: relative; z-index: 2; }
 
@@ -192,9 +196,11 @@ main, .footer { position: relative; z-index: 2; }
 .problema { position: relative; padding: 120px 0 140px; background: linear-gradient(180deg, transparent, rgba(11, 10, 20, .85) 12%, rgba(11, 10, 20, .85) 88%, transparent); }
 .problema__pin { min-height: 100vh; display: flex; align-items: center; }
 .problema__grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: clamp(30px, 5vw, 80px); align-items: center; }
-.pq { margin-top: 22px; font-size: clamp(18px, 1.5vw, 22px); color: var(--fg-3); max-width: 540px; transition: color .5s; }
-.pq.is-on { color: var(--fg); }
-.pq--strong.is-on { color: var(--warn); font-weight: 600; }
+.pq { margin-top: 22px; font-size: clamp(18px, 1.5vw, 22px); color: var(--fg); max-width: 540px; transition: color .5s; }
+.fx .pq { color: var(--fg-3); }
+.fx .pq.is-on { color: var(--fg); }
+.pq--strong, .fx .pq--strong.is-on { color: var(--warn); font-weight: 600; }
+.fx .pq--strong { color: var(--fg-3); font-weight: 400; }
 .compare__frame { border-radius: 16px; overflow: hidden; background: #0d0c16; box-shadow: 0 0 0 1px var(--line-2), 0 50px 100px -30px rgba(0, 0, 0, .9); }
 .compare__screen { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
 .old { position: absolute; inset: 0; display: flex; flex-direction: column; background: #d9d9d9; color: #333; font-family: "Times New Roman", Times, serif; font-size: clamp(10px, 1vw, 14px); filter: saturate(.8); }
@@ -216,8 +222,8 @@ main, .footer { position: relative; z-index: 2; }
 .compare__labels { display: flex; justify-content: space-between; margin-top: 16px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 .lb--old { color: var(--fg-3); } .lb--new { color: var(--cta); }
 .statement { margin: 140px auto 0; max-width: 16ch; text-align: center; font-size: clamp(38px, 6vw, 92px); font-weight: 800; letter-spacing: -.045em; line-height: 1.02; }
-.statement .w { opacity: .14; transition: opacity .2s; }
-.statement .w.is-on { opacity: 1; }
+.fx .statement .w { opacity: .14; transition: opacity .2s; }
+.fx .statement .w.is-on { opacity: 1; }
 
 /* ---------- Diferenciais (bento) ---------- */
 .dif { padding: 160px 0 120px; }
@@ -302,7 +308,8 @@ main, .footer { position: relative; z-index: 2; }
 .steps h3 { font-size: 24px; letter-spacing: -.02em; }
 .steps p { margin-top: 10px; color: var(--fg-2); font-size: 16px; }
 .steps__line { position: absolute; left: 22px; right: 0; top: 21px; height: 2px; background: var(--line); }
-.steps__line i { display: block; height: 100%; background: var(--grad); transform-origin: left; transform: scaleX(0); box-shadow: 0 0 14px rgba(58, 140, 255, .7); }
+.steps__line i { display: block; height: 100%; background: var(--grad); transform-origin: left; box-shadow: 0 0 14px rgba(58, 140, 255, .7); }
+.fx .steps__line i { transform: scaleX(0); }
 
 /* ---------- Por que agora ---------- */
 .agora { padding: 100px 0 140px; }
@@ -386,7 +393,7 @@ input.is-err { box-shadow: inset 0 0 0 1.5px #ff6b6b, 0 0 0 4px rgba(255, 107, 1
 
 /* ---------- Modais ---------- */
 .modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; visibility: hidden; opacity: 0; transition: opacity .4s var(--ease), visibility .4s; }
-.modal.is-open { visibility: visible; opacity: 1; }
+.modal.is-open { visibility: visible; opacity: 1; transition: opacity .4s var(--ease), visibility 0s; }
 .modal__bg { position: absolute; inset: 0; background: rgba(3, 2, 8, .75); backdrop-filter: blur(10px); }
 .modal__box { position: relative; width: min(560px, 100%); padding: 44px 36px 32px; border-radius: 28px; background: #0f0d1c; box-shadow: inset 0 0 0 1px var(--line-2), 0 60px 140px -30px rgba(0, 0, 0, 1), 0 0 120px -30px rgba(0, 102, 255, .6); transform: translateY(30px) scale(.97); transition: transform .5s var(--ease); }
 .modal.is-open .modal__box { transform: none; }
@@ -399,7 +406,6 @@ input.is-err { box-shadow: inset 0 0 0 1.5px #ff6b6b, 0 0 0 4px rgba(255, 107, 1
 @keyframes stepIn { from { opacity: 0; transform: translateX(24px); } }
 .wiz__k { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--cta); }
 .wiz h3 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -.03em; line-height: 1.1; }
-.wiz h3 em { display: block; }
 .wiz__err { min-height: 22px; margin-top: 8px; font-size: 14px; color: #ff8a8a; }
 .wiz__nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
 .wiz [data-wiz-send] { display: none; }
@@ -421,8 +427,9 @@ input.is-err { box-shadow: inset 0 0 0 1.5px #ff6b6b, 0 0 0 4px rgba(255, 107, 1
 .zoom__foot small { color: var(--fg-3); font-size: 13px; }
 
 /* ---------- Revelar ---------- */
-[data-r] { opacity: 0; transform: translateY(40px); }
-.no-js [data-r], .reduced [data-r] { opacity: 1; transform: none; }
+[data-r] { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+[data-r].in, .reduced [data-r] { opacity: 1; transform: none; }
+.bcard[data-r].in { transition: opacity 1s var(--ease), transform .4s var(--ease), box-shadow .4s; }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1080px) {
@@ -509,3 +516,6 @@ input.is-err { box-shadow: inset 0 0 0 1.5px #ff6b6b, 0 0 0 4px rgba(255, 107, 1
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+@media (max-width: 700px) { .vortex-poster { opacity: .45; object-position: center top; } }
+.vortex-poster:not([src]) { visibility: hidden; }
+.footer, .faq, .final { content-visibility: auto; contain-intrinsic-size: auto 900px; }

@@ -11,18 +11,10 @@
   const MODELOS = window.MODELOS || [];
   const CATS = window.CATEGORIAS || {};
   if (reduced) document.documentElement.classList.add("reduced");
-  const hasGsap = !!(window.gsap && window.ScrollTrigger);
-  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
   const safe = (fn) => { try { fn(); } catch (e) { console.error(e); } };
 
   /* ---------- Rolagem suave ---------- */
-  let lenis = null;
-  if (window.Lenis && hasGsap && !reduced) {
-    lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
-  }
+  let lenis = null; // carregado sob demanda junto com as animações (ver loadFx)
   const scrollToEl = (el) => (lenis ? lenis.scrollTo(el, { offset: -20, duration: 1.4 }) : el.scrollIntoView({ behavior: "smooth" }));
   $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
     const id = a.getAttribute("href");
@@ -40,7 +32,6 @@
     el.innerHTML = out.join("");
     return $$(".w", el);
   };
-  const heroWords = splitWords($(".hero__title"));
   const stWords = splitWords($("[data-statement]"));
 
   /* ---------- Escassez (vagas do mês) ---------- */
@@ -107,23 +98,22 @@
     }
     return ok;
   };
-  const MSG_ERR = { nome: "Digite seu nome para continuar.", cidade: "Informe a sua cidade.", empresa: "Informe o nome da empresa.", segmento: "Escolha ou escreva o seu segmento." };
+  const MSG_ERR = { nome: "Digite seu nome para continuar.", empresa: "Informe o nome da empresa.", segmento: "Escolha ou escreva o seu segmento." };
 
   let origem = "pagina";
   function sendWhats(f) {
-    const d = Object.fromEntries(["nome", "cidade", "empresa", "segmento"].map((k) => [k, f.elements[k].value.trim()]));
+    const d = Object.fromEntries(["nome", "empresa", "segmento"].map((k) => [k, f.elements[k].value.trim()]));
     const msg = [
       LP.saudacao || "Olá! Vim pelo site e quero um site premium.",
       "",
       `*Nome:* ${d.nome}`,
-      `*Cidade:* ${d.cidade}`,
       `*Empresa:* ${d.empresa}`,
       `*Segmento:* ${d.segmento}`,
     ].join("\n");
     const url = `https://wa.me/${(LP.whatsapp || "").replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
     // Mensuração: eventos para Google Tag Manager / GA4 / Meta Pixel, se instalados
     safe(() => {
-      (window.dataLayer = window.dataLayer || []).push({ event: "lead_whatsapp", origem, segmento: d.segmento, cidade: d.cidade });
+      (window.dataLayer = window.dataLayer || []).push({ event: "lead_whatsapp", origem, segmento: d.segmento });
       window.gtag && gtag("event", "generate_lead", { origem, segmento: d.segmento });
       window.fbq && fbq("track", "Lead", { content_category: d.segmento });
     });
@@ -148,7 +138,7 @@
   const inlineForm = $(".card-form");
   inlineForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const bad = ["nome", "cidade", "empresa", "segmento"].filter((k) => !checkField(inlineForm, k));
+    const bad = ["nome", "empresa", "segmento"].filter((k) => !checkField(inlineForm, k));
     if (bad.length) { const el = inlineForm.elements[bad[0]]; el.classList.contains("seg__other") && !el.classList.contains("is-on") ? $("[data-seg]", inlineForm).scrollIntoView({ block: "center" }) : el.focus(); return; }
     origem = "formulario-final";
     sendWhats(inlineForm);
@@ -176,7 +166,7 @@
   const wiz = $(".wiz");
   const steps = $$(".wiz__step", wiz);
   const err = $(".wiz__err", wiz);
-  const names = ["nome", "cidade", "empresa", "segmento"];
+  const names = ["nome", "empresa", "segmento"];
   let cur = 0;
   const show = (i) => {
     cur = Math.max(0, Math.min(steps.length - 1, i));
@@ -186,7 +176,8 @@
     $("[data-wiz-bar]").style.width = ((cur + 1) / steps.length) * 100 + "%";
     err.textContent = "";
     const inp = $("input", steps[cur]);
-    if (!(names[cur] === "segmento" && !inp.classList.contains("is-on"))) setTimeout(() => inp.focus({ preventScroll: true }), 60);
+    // foco imediato (dentro do clique, para o teclado abrir no celular)
+    if (!(names[cur] === "segmento" && !inp.classList.contains("is-on"))) inp.focus({ preventScroll: true });
   };
   const next = () => {
     if (!checkField(wiz, names[cur])) {
@@ -231,14 +222,18 @@
     const urlEl = $("[data-demo-url]");
     const list = MODELOS;
     const DUR = 4200;
-    screen.innerHTML = list.map((m, i) => `<img src="assets/modelos/${m.id}.webp" alt="Modelo de site para ${m.segmento.toLowerCase()}" ${i ? 'loading="lazy"' : ""}>`).join("");
-    phone.innerHTML = list.map((m, i) => `<img src="assets/modelos/${m.id}-m.webp" alt="" ${i ? 'loading="lazy"' : ""}>`).join("");
+    // só a imagem da vez (e a próxima) é baixada; as demais ficam em data-*
+    const dsk = (m) => `data-srcset="assets/modelos/${m.id}-900.webp 900w, assets/modelos/${m.id}.webp 1800w" sizes="(max-width: 700px) 92vw, 1240px"`;
+    screen.innerHTML = list.map((m) => `<img ${dsk(m)} alt="Modelo de site para ${m.segmento.toLowerCase()}" decoding="async">`).join("");
+    phone.innerHTML = list.map((m) => `<img data-srcset="assets/modelos/${m.id}-m360.webp 360w, assets/modelos/${m.id}-m.webp 780w" sizes="(max-width: 700px) 30vw, 236px" alt="" decoding="async">`).join("");
+    const load = (im) => { if (im && im.dataset.srcset) { im.sizes = im.getAttribute("sizes"); im.srcset = im.dataset.srcset; delete im.dataset.srcset; } };
     nav.innerHTML = list.map((m, i) => `<button aria-label="Ver ${m.segmento}" data-i="${i}"></button>`).join("");
     nav.style.setProperty("--dur", DUR + "ms");
     const imgs = $$("img", screen), pimgs = $$("img", phone), dots = $$("button", nav);
     let idx = -1, timer = null;
     const go = (i) => {
       idx = (i + list.length) % list.length;
+      [idx, (idx + 1) % list.length].forEach((k) => { load(imgs[k]); load(pimgs[k]); });
       imgs.forEach((im, k) => im.classList.toggle("is-on", k === idx));
       pimgs.forEach((im, k) => im.classList.toggle("is-on", k === idx));
       urlEl.textContent = list[idx].url;
@@ -247,10 +242,13 @@
       timer = setTimeout(() => go(idx + 1), DUR);
     };
     nav.addEventListener("click", (e) => { const b = e.target.closest("button"); b && go(+b.dataset.i); });
-    go(0);
+    // a vitrine do hero começa depois que o essencial da página carregou
+    const begin = () => go(0);
+    document.readyState === "complete" ? begin() : addEventListener("load", begin, { once: true });
   });
 
   /* ---------- Vitrine em anel 3D ---------- */
+  let ring = null;
   safe(() => {
     const stage = $("[data-ring]");
     const track = $("[data-ring-track]");
@@ -259,7 +257,7 @@
     track.innerHTML = MODELOS.map((m, i) => `
       <div class="rcard" data-i="${i}" role="button" tabindex="0" aria-label="${m.segmento}: ${m.nome}">
         <div class="rcard__bar"><span class="dots"><i></i><i></i><i></i></span><span>${m.url}</span><span>Modelo</span></div>
-        <img src="assets/modelos/${m.id}.webp" alt="Modelo de site para ${m.segmento.toLowerCase()}" loading="lazy" draggable="false">
+        <img data-lazy data-srcset="assets/modelos/${m.id}-900.webp 900w, assets/modelos/${m.id}.webp 1800w" sizes="(max-width: 700px) 72vw, 480px" alt="Modelo de site para ${m.segmento.toLowerCase()}" decoding="async" draggable="false">
       </div>`).join("");
     const cards = $$(".rcard", track);
     let R = 600, rot = 0, target = 0, dragging = false, startX = 0, startRot = 0, moved = 0, lastX = 0, vel = 0, idleAt = 0, front = -1, inView = false, enter = { p: 0 };
@@ -308,9 +306,8 @@
     requestAnimationFrame(tick);
 
     new IntersectionObserver((e) => (inView = e[0].isIntersecting), { rootMargin: "100px" }).observe(stage);
-    if (hasGsap && !reduced) {
-      gsap.to(enter, { p: 1, ease: "none", scrollTrigger: { trigger: stage, start: "top 95%", end: "top 35%", scrub: 1 } });
-    } else enter.p = 1;
+    enter.p = 1;
+    ring = { enter, stage };
 
     stage.addEventListener("pointerdown", (e) => {
       if (e.target.closest(".ring-arrow")) return;
@@ -370,26 +367,43 @@
   });
 
   /* ---------- Botões magnéticos ---------- */
-  if (fine && !reduced && hasGsap) $$(".magnetic").forEach((b) => {
+  const magnetic = () => fine && !reduced && $$(".magnetic").forEach((b) => {
     const x = gsap.quickTo(b, "x", { duration: 0.6, ease: "power3" }), y = gsap.quickTo(b, "y", { duration: 0.6, ease: "power3" });
     b.addEventListener("pointermove", (e) => { const r = b.getBoundingClientRect(); x((e.clientX - r.left - r.width / 2) * 0.25); y((e.clientY - r.top - r.height / 2) * 0.35); });
     b.addEventListener("pointerleave", () => { x(0); y(0); });
   });
 
   /* ---------- Animações de scroll ---------- */
+  // Imagens abaixo da dobra: só baixam quando chegam perto da tela
+  safe(() => {
+    const imgs = $$("img[data-lazy]");
+    const put = (im) => { im.srcset = im.dataset.srcset; if (im.dataset.src) im.src = im.dataset.src; im.removeAttribute("data-lazy"); };
+    if (!("IntersectionObserver" in window)) return imgs.forEach(put);
+    // observa o bloco (anel ou comparação) e libera todas as imagens dele de uma vez
+    const groups = new Map();
+    imgs.forEach((im) => { const box = im.closest(".ring-stage, .compare") || im; groups.set(box, [...(groups.get(box) || []), im]); });
+    const io = new IntersectionObserver((ents) => ents.forEach((e) => { if (e.isIntersecting) { groups.get(e.target).forEach(put); io.unobserve(e.target); } }), { rootMargin: "400px 0px" });
+    groups.forEach((_, box) => io.observe(box));
+  });
+
+  // Revelar ao entrar na tela (sem biblioteca)
+  safe(() => {
+    const els = $$("[data-r]");
+    if (reduced || !("IntersectionObserver" in window)) return els.forEach((e) => e.classList.add("in"));
+    const io = new IntersectionObserver((ents) => ents.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("in"); io.unobserve(e.target);
+    }), { rootMargin: "0px 0px -8% 0px" });
+    els.forEach((e) => io.observe(e));
+  });
+
+  // Animações ligadas à rolagem (GSAP + ScrollTrigger + Lenis), carregadas na primeira interação
   function scrollAnims() {
-    if (!hasGsap || reduced) {
-      $$("[data-r]").forEach((e) => e.classList.add("in"));
-      $$(".pq").forEach((p) => p.classList.add("is-on"));
-      stWords.forEach((w) => w.classList.add("is-on"));
-      $("[data-new]").style.clipPath = "inset(0 0 0 0)"; $("[data-scan]").style.display = "none";
-      return;
+    document.documentElement.classList.add("fx");
+    if (ring && ring.stage.getBoundingClientRect().top > innerHeight * 0.95) {
+      ring.enter.p = 0;
+      gsap.to(ring.enter, { p: 1, ease: "none", scrollTrigger: { trigger: ring.stage, start: "top 95%", end: "top 35%", scrub: 1 } });
     }
-    ScrollTrigger.batch("[data-r]", {
-      start: "top 88%",
-      once: true,
-      onEnter: (els) => { els.forEach((e) => e.classList.add("in")); gsap.to(els, { opacity: 1, y: 0, duration: 1.1, ease: "power4.out", stagger: 0.09, overwrite: true }); },
-    });
 
     // Hero: aparelho se aproxima ao rolar
     gsap.fromTo(".device", { rotationX: 18, scale: 0.92 }, { rotationX: 0, scale: 1, ease: "none", scrollTrigger: { trigger: ".hero__stage", start: "top 95%", end: "top 25%", scrub: true } });
@@ -441,13 +455,43 @@
     onScroll();
   });
 
-  /* ---------- Entrada (o site abre direto, sem tela de carregamento) ---------- */
-  window.dispatchEvent(new Event("lp:start"));
-  if (hasGsap && !reduced) {
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    tl.from($$(".w > span", $(".hero__title")), { yPercent: 100, duration: 0.8, stagger: 0.025 }, 0)
-      .from([".hero__sub", ".hero__actions", ".hero__note"], { y: 16, opacity: 0, duration: 0.6, stagger: 0.06 }, 0.2)
-      .from(".chip", { scale: 0.7, opacity: 0, duration: 0.6, stagger: 0.08, ease: "back.out(2)" }, 0.5);
-  }
-  safe(scrollAnims);
+  /* ---------- Carregamento sob demanda (desempenho) ----------
+     A página abre só com o essencial. Na primeira interação (rolar, tocar,
+     mover o mouse ou teclar) entram as animações de rolagem e a cena 3D. */
+  // imagem estática do redemoinho: baixada depois que a página carregou
+  addEventListener("load", () => safe(() => {
+    const im = $(".vortex-poster");
+    if (im && !document.documentElement.classList.contains("v3d")) im.src = innerWidth <= 700 ? im.dataset.srcM : im.dataset.srcD;
+  }));
+  const addScript = (src) => new Promise((ok, fail) => { const t = document.createElement("script"); t.src = src; t.onload = ok; t.onerror = fail; document.head.appendChild(t); });
+  let fxStarted = false;
+  const loadFx = () => {
+    if (fxStarted) return; fxStarted = true;
+    ["scroll", "wheel", "pointerdown", "pointermove", "touchstart", "keydown"].forEach((ev) => removeEventListener(ev, loadFx));
+    if (reduced) return;
+    // cena 3D (módulo com Three.js)
+    safe(() => {
+      const im = document.createElement("script");
+      im.type = "importmap"; im.textContent = JSON.stringify({ imports: { three: new URL("assets/vendor/three.module.min.js", location.href).href } });
+      document.head.appendChild(im);
+      const m = document.createElement("script"); m.type = "module"; m.src = "assets/js/vortex3d.js?v=20261029d"; document.head.appendChild(m);
+    });
+    addScript("assets/vendor/gsap.min.js")
+      .then(() => addScript("assets/vendor/ScrollTrigger.min.js"))
+      .then(() => addScript("assets/vendor/lenis.min.js"))
+      .then(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        if (window.Lenis) {
+          lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+          lenis.on("scroll", ScrollTrigger.update);
+          gsap.ticker.add((t) => lenis.raf(t * 1000));
+          gsap.ticker.lagSmoothing(0);
+        }
+        safe(scrollAnims);
+        safe(magnetic);
+        ScrollTrigger.refresh();
+      })
+      .catch((e) => console.error(e));
+  };
+  ["scroll", "wheel", "pointerdown", "pointermove", "touchstart", "keydown"].forEach((ev) => addEventListener(ev, loadFx, { passive: true }));
 })();

@@ -17,7 +17,7 @@ try {
   canvas.remove();
   throw e;
 }
-renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 1.75));
+renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.25 : 1.5));
 renderer.setSize(innerWidth, innerHeight);
 
 const scene = new THREE.Scene();
@@ -26,8 +26,8 @@ camera.position.set(0, 0, 8);
 
 // Tipos: 0 funil · 1 aro · 2 espiral · 3 seta · 4 poeira
 const parts = mobile
-  ? [[9000, 0], [2200, 1], [4200, 2], [2600, 3], [3000, 4]]
-  : [[20000, 0], [4500, 1], [9000, 2], [5200, 3], [7000, 4]];
+  ? [[5200, 0], [1300, 1], [2600, 2], [1700, 3], [1400, 4]]
+  : [[13000, 0], [3000, 1], [6000, 2], [3600, 3], [4000, 4]];
 const N = parts.reduce((s, p) => s + p[0], 0);
 const aT = new Float32Array(N), aP = new Float32Array(N), aA = new Float32Array(N), aR = new Float32Array(N);
 let k = 0;
@@ -44,7 +44,7 @@ geo.setAttribute("aR", new THREE.BufferAttribute(aR, 1));
 const uni = {
   uTime: { value: 0 },
   uPx: { value: renderer.getPixelRatio() },
-  uSize: { value: mobile ? 34 : 38 },
+  uSize: { value: mobile ? 44 : 44 },
 };
 
 const mat = new THREE.ShaderMaterial({
@@ -206,3 +206,4 @@ function frame() {
   renderer.render(scene, camera);
 }
 frame();
+requestAnimationFrame(() => document.documentElement.classList.add("v3d"));

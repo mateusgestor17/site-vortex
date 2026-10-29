@@ -14,10 +14,9 @@
   <meta property="og:description" content="Sites premium com design exclusivo, animações 3D e estrutura pensada para gerar contatos.">
   <meta property="og:image" content="assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261029c">
+  <link rel="preload" href="assets/fonts/InterTight.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/InstrumentSerif-Italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css?v=20261029d">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -34,9 +33,13 @@
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
   if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  n.queue=[];
+  // desempenho: o script da Meta carrega na primeira interação (ou 4,5 s após carregar); os eventos ficam na fila até lá
+  var go=function(){if(go.done)return;go.done=1;t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)};
+  ['scroll','pointerdown','touchstart','keydown','mousemove'].forEach(function(x){f.addEventListener(x,go,{once:true,passive:true})});
+  f.addEventListener('load',function(){setTimeout(go,4500)});
+  }(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '1000201836168398');
   fbq('track', 'PageView');
@@ -57,6 +60,7 @@
     </defs>
   </svg>
 
+  <img class="vortex-poster" data-src-d="assets/vortex-d.webp" data-src-m="assets/vortex-m.webp" alt="" aria-hidden="true">
   <canvas id="vortex" aria-hidden="true"></canvas>
   <div class="grain" aria-hidden="true"></div>
 
@@ -79,7 +83,7 @@
     <section class="hero" id="inicio">
       <div class="hero__txt">
         <span class="tag hero__tag"><i></i>DESIGN • TECNOLOGIA • EXPERIÊNCIA DIGITAL</span>
-        <h1 class="hero__title split">Sua empresa merece um site que <em>impressiona</em> desde o primeiro clique.</h1>
+        <h1 class="hero__title">Sua empresa merece um site que <em>impressiona</em> desde o primeiro clique.</h1>
         <p class="hero__sub">Criamos sites premium, com design exclusivo, animações modernas e uma experiência digital pensada para valorizar sua marca e facilitar novos contatos.</p>
         <div class="hero__actions">
           <button class="btn btn--cta btn--lg magnetic" data-lead="hero"><span>QUERO UM SITE DESSE NÍVEL</span><svg class="ico"><use href="#arr"/></svg></button>
@@ -177,13 +181,13 @@
                 <!-- antes -->
                 <div class="old">
                   <div class="old__head"><span class="old__logo">EMPRESA EXEMPLO</span><span class="old__menu">Home &nbsp;|&nbsp; Empresa &nbsp;|&nbsp; Serviços &nbsp;|&nbsp; Contato</span></div>
-                  <div class="old__img"><img src="assets/antigo.jpg" alt=""></div>
+                  <div class="old__img"><img data-lazy data-srcset="assets/antigo.jpg 480w" data-src="assets/antigo.jpg" alt="" decoding="async"></div>
                   <div class="old__body"><b>Bem vindo ao nosso site</b><p>Somos uma empresa com anos de experiência no mercado, trabalhando sempre com qualidade e compromisso com nossos clientes. Entre em contato para mais informações.</p></div>
                   <div class="old__foot">Copyright © 2011 · Todos os direitos reservados · Melhor visualizado em 1024x768</div>
                 </div>
                 <!-- depois -->
                 <div class="new" data-new>
-                  <img src="assets/modelos/vidracaria.webp" alt="O mesmo negócio com um site premium" loading="lazy">
+                  <img data-lazy data-srcset="assets/modelos/vidracaria-900.webp 900w, assets/modelos/vidracaria.webp 1800w" sizes="(max-width: 1080px) 92vw, 640px" alt="O mesmo negócio com um site premium" decoding="async">
                 </div>
                 <div class="scan" data-scan></div>
                 <div class="glitch"></div>
@@ -311,7 +315,7 @@
         <div class="final__txt" data-r>
           <span class="tag"><i></i>Último passo</span>
           <h2 class="h2 h2--xl">Pronto para ter um site <em>desse nível</em>?</h2>
-          <p class="lead">Preencha em menos de 30 segundos e continue a conversa direto no WhatsApp, com suas informações já enviadas.</p>
+          <p class="lead">Preencha em menos de 20 segundos e continue a conversa direto no WhatsApp, com suas informações já enviadas.</p>
           <ul class="final__trust">
             <li><svg><use href="#wa"/></svg>Atendimento direto pelo WhatsApp</li>
             <li><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg>Seus dados não são compartilhados</li>
@@ -321,7 +325,6 @@
         <form class="lead-form card-form" data-r novalidate>
           <div class="card-form__head"><b>Solicite seu projeto</b><span class="scarcity-pill scarcity-pill--sm"><span class="livedot"></span><span data-vagas-txt>Agenda do mês aberta</span></span></div>
           <label class="field"><span>Seu nome</span><input name="nome" autocomplete="name" placeholder="Como podemos te chamar?" required></label>
-          <label class="field"><span>Cidade onde você está</span><input name="cidade" autocomplete="address-level2" placeholder="Ex.: Joinville - SC" required></label>
           <label class="field"><span>Nome da empresa</span><input name="empresa" autocomplete="organization" placeholder="Ex.: Prisma Vidros" required></label>
           <div class="field">
             <span>Segmento que você atende</span>
@@ -356,7 +359,7 @@
   </footer>
 
   <!-- Botões fixos -->
-  <a class="wa-float" data-wa href="https://wa.me/5547991625752" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg><use href="#wa"/></svg><span>Fale com a gente</span></a>
+  <button class="wa-float" data-lead="flutuante" aria-label="Quero um site: abrir formulário"><svg><use href="#wa"/></svg><span>Quero meu site</span></button>
   <div class="mbar"><button class="btn btn--cta btn--block" data-lead="barra"><span>QUERO UM SITE DESSE NÍVEL</span><svg class="ico"><use href="#arr"/></svg></button></div>
 
   <!-- Modal do formulário (passo a passo) -->
@@ -367,22 +370,17 @@
       <div class="wiz__bar"><i data-wiz-bar></i></div>
       <form class="lead-form wiz" novalidate>
         <div class="wiz__step is-on">
-          <span class="wiz__k">1 de 4</span>
+          <span class="wiz__k">1 de 3</span>
           <h3 id="mTitle">Vamos começar. <em>Qual é o seu nome?</em></h3>
           <input name="nome" autocomplete="name" placeholder="Digite seu nome" required>
         </div>
         <div class="wiz__step">
-          <span class="wiz__k">2 de 4</span>
-          <h3>Em qual <em>cidade</em> você está?</h3>
-          <input name="cidade" autocomplete="address-level2" placeholder="Ex.: Joinville - SC" required>
-        </div>
-        <div class="wiz__step">
-          <span class="wiz__k">3 de 4</span>
+          <span class="wiz__k">2 de 3</span>
           <h3>Qual é o nome da sua <em>empresa</em>?</h3>
           <input name="empresa" autocomplete="organization" placeholder="Nome da empresa" required>
         </div>
         <div class="wiz__step">
-          <span class="wiz__k">4 de 4</span>
+          <span class="wiz__k">3 de 3</span>
           <h3>Qual <em>segmento</em> você atende?</h3>
           <div class="seg" data-seg></div>
           <input name="segmento" class="seg__other" placeholder="Qual é o seu segmento?" required>
@@ -413,13 +411,8 @@
     </div>
   </div>
 
-  <script src="assets/vendor/gsap.min.js"></script>
-  <script src="assets/vendor/ScrollTrigger.min.js"></script>
-  <script src="assets/vendor/lenis.min.js"></script>
-  <script src="assets/js/data.js?v=20261029c"></script>
-  <script src="assets/js/modelos.js?v=20261029c"></script>
-  <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
-  <script type="module" src="assets/js/vortex3d.js?v=20261029c"></script>
-  <script src="assets/js/main.js?v=20261029c"></script>
+  <script src="assets/js/data.js?v=20261029d" defer></script>
+  <script src="assets/js/modelos.js?v=20261029d" defer></script>
+  <script src="assets/js/main.js?v=20261029d" defer></script>
 </body>
 </html>
