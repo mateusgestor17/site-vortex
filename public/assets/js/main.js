@@ -116,6 +116,7 @@
       (window.dataLayer = window.dataLayer || []).push({ event: "lead_whatsapp", origem, segmento: d.segmento });
       window.gtag && gtag("event", "generate_lead", { origem, segmento: d.segmento });
       window.fbq && fbq("track", "Lead", { content_category: d.segmento });
+      window.clarity && clarity("event", "lead_whatsapp");
     });
     // link real (funciona também em navegadores que bloqueiam window.open)
     const a = Object.assign(document.createElement("a"), { href: url, target: "_blank", rel: "noopener" });
@@ -474,7 +475,7 @@
       const im = document.createElement("script");
       im.type = "importmap"; im.textContent = JSON.stringify({ imports: { three: new URL("assets/vendor/three.module.min.js", location.href).href } });
       document.head.appendChild(im);
-      const m = document.createElement("script"); m.type = "module"; m.src = "assets/js/vortex3d.js?v=20261029d"; document.head.appendChild(m);
+      const m = document.createElement("script"); m.type = "module"; m.src = "assets/js/vortex3d.js?v=20261030a"; document.head.appendChild(m);
     });
     addScript("assets/vendor/gsap.min.js")
       .then(() => addScript("assets/vendor/ScrollTrigger.min.js"))
